@@ -16,11 +16,12 @@ export class TrackedDateView {
     this.date = document.createElement("strong")
     this.date.dataset.name = "date"
     this.date.textContent = this.model.dateAsString()
+    this.date.style.fontSize = "1.5em"
     summary.appendChild(this.date)
 
     this.time = document.createElement("span")
     this.time.style.float = "right"
-    this.time.style.marginTop = "3px"
+    this.time.style.fontSize = "1.5em"
     this.time.dataset.name = "time"
     this.time.textContent = this.model.time.asString()
     summary.appendChild(this.time)
