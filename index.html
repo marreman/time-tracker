@@ -11,7 +11,7 @@
     <style>
       html {
         font-family: system-ui, sans-serif;
-        font-size: 18px;
+        font-size: 20px;
         font-variant-numeric: tabular-nums;
       }
 
@@ -36,6 +36,8 @@
         border: 1px solid rgba(0, 0, 0, 0.2);
         background-color: white;
         border-radius: 8px;
+        white-space: nowrap;
+        font-variant-numeric: inherit;
       }
 
       button {
@@ -43,7 +45,7 @@
         font-size: inherit;
         color: white;
         font-weight: 500;
-        padding: 6px 12px;
+        padding: 6px 16px;
         border: none;
         border-radius: 8px;
         min-height: 32px;
@@ -79,6 +81,51 @@
 
       .text-right {
         text-align: right;
+      }
+
+      .ml-auto {
+        margin-left: auto;
+      }
+
+      .time-input {
+        display: flex;
+        min-width: 0;
+        border-radius: 8px;
+        border: 1px solid rgba(0, 0, 0, 0.2);
+        width: 6em;
+      }
+
+      .time-input > input {
+        min-width: 0;
+        border: 0;
+        background-color: transparent;
+        text-align: right;
+        width: 50%;
+        font-size: 1.2em;
+      }
+
+      .time-input > input:first-child {
+        border-right: 0;
+        border-top-right-radius: 0;
+        border-bottom-right-radius: 0;
+        order: 1;
+        padding-right: 4px;
+      }
+
+      .time-input:before {
+        content: ":";
+        order: 2;
+        padding-top: 4px;
+        margin: 0 2px;
+        color: rgba(0, 0, 0, 0.2);
+      }
+
+      .time-input > input:last-child {
+        border-left: 0;
+        border-top-left-radius: 0;
+        border-bottom-left-radius: 0;
+        order: 3;
+        padding-left: 4px;
       }
     </style>
   </head>

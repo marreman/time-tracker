@@ -26,24 +26,29 @@ export class TrackedDateView {
     summary.appendChild(this.time)
 
     const row = new Row()
-    row.el.style.marginTop = "10px"
+    row.el.style.marginTop = "16px"
     this.root.appendChild(row.el)
+
+    const timeInput = document.createElement("div")
+    timeInput.classList.add("time-input")
+    row.appendChild(timeInput)
 
     this.hoursInput = document.createElement("input")
     this.hoursInput.dataset.name = "hours-input"
-    this.hoursInput.type = "number"
-    this.hoursInput.placeholder = "Timmar"
+    this.hoursInput.inputMode = "numeric"
+    this.hoursInput.placeholder = "00"
     this.hoursInput.style.minWidth = 0
-    row.appendChild(this.hoursInput)
+    timeInput.appendChild(this.hoursInput)
 
     this.minutesInput = document.createElement("input")
     this.minutesInput.dataset.name = "minutes-input"
-    this.minutesInput.type = "number"
-    this.minutesInput.placeholder = "Minuter"
+    this.minutesInput.inputMode = "numeric"
+    this.minutesInput.placeholder = "00"
     this.minutesInput.style.minWidth = 0
-    row.appendChild(this.minutesInput)
+    timeInput.appendChild(this.minutesInput)
 
     this.addButton = document.createElement("button")
+    this.addButton.classList.add("ml-auto")
     this.addButton.dataset.name = "add-button"
     this.addButton.textContent = "Lägg till"
     this.addButton.addEventListener("click", this.addTime.bind(this))
