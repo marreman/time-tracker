@@ -1,7 +1,7 @@
 import { NumericString } from "./NumericString.js"
+import { test } from "./test-lib.js"
 
 export class TimeCount {
-  #hours
   #minutes
 
   static fromDisplayString(timeDisplayString) {
@@ -15,16 +15,7 @@ export class TimeCount {
   }
 
   constructor(hours, minutes) {
-    this.hours = hours
-    this.minutes = minutes
-  }
-
-  get hours() {
-    return this.#hours
-  }
-
-  set hours(value) {
-    this.#hours = Math.max(0, value)
+    this.minutes = Math.round(minutes + hours * 60)
   }
 
   get minutes() {
@@ -36,20 +27,32 @@ export class TimeCount {
   }
 
   isZero() {
-    return !this.hours && !this.minutes
+    return !this.#minutes
   }
 
   asString() {
-    return `${this.hours}:${this.minutes}`
+    const hours = Math.floor(this.#minutes / 60)
+    const minutes = this.#minutes % 60
+    return `${hours}:${minutes.toString().padStart(2, "0")}`
   }
 
   add(aTimeCount) {
-    this.hours += aTimeCount.hours
     this.minutes += aTimeCount.minutes
   }
 
   subtract(aTimeCount) {
-    this.hours -= aTimeCount.hours
     this.minutes -= aTimeCount.minutes
   }
 }
+
+test("adds hours when necessary", (isEqual) => {
+  const a = new TimeCount(0, 0)
+  a.add(new TimeCount(0, 90))
+  isEqual(a.asString(), "1:30")
+})
+
+test("removes hours when necessary", (isEqual) => {
+  const a = new TimeCount(1, 10)
+  a.subtract(new TimeCount(0, 40))
+  isEqual(a.asString(), "0:30")
+})
