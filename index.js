@@ -13,4 +13,6 @@ app.view.render()
 
 window.app = app
 
-runTests(app.view.root)
+if (location.hash === "#test") {
+  runTests(app.view.root)
+}

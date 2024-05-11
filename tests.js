@@ -1,57 +1,57 @@
 export function runTests(app_) {
-  let app = new ElementHandle(app_)
+  const app = new ElementHandle(app_)
+  const aDate = "1980-08-08"
 
   test("adding a new date", (isEqual) => {
-    app.find("new-date-input").value = "1980-08-08"
+    app.find("new-date-input").value = aDate
     app.find("new-date-button").click()
-    isEqual(
-      app.trackedDate("1980-08-08").find("date").textContent,
-      "1980-08-08"
-    )
-    isEqual(app.trackedDate("1980-08-08").find("time").textContent, "0:0")
+    isEqual(app.trackedDate(aDate).find("date").textContent, aDate)
+    isEqual(app.trackedDate(aDate).find("time").textContent, "0:0")
   })
 
   test("adding time for the tracked date", (isEqual) => {
-    app.trackedDate("1980-08-08").find("hours-input").value = "2"
-    app.trackedDate("1980-08-08").find("minutes-input").value = "3"
-    app.trackedDate("1980-08-08").find("add-button").click()
-    isEqual(app.trackedDate("1980-08-08").find("time").textContent, "2:3")
+    app.trackedDate(aDate).find("hours-input").value = "2"
+    app.trackedDate(aDate).find("minutes-input").value = "3"
+    app.trackedDate(aDate).find("add-button").click()
+    isEqual(app.trackedDate(aDate).find("time").textContent, "2:3")
   })
 
   test("that is shows a total", (isEqual) => {
-    app.find("new-date-input").value = "1990-09-09"
+    const anotherDate = "1990-09-09"
+
+    app.find("new-date-input").value = anotherDate
     app.find("new-date-button").click()
-    app.trackedDate("1990-09-09").find("hours-input").value = "1"
-    app.trackedDate("1990-09-09").find("minutes-input").value = "1"
-    app.trackedDate("1990-09-09").find("add-button").click()
+    app.trackedDate(anotherDate).find("hours-input").value = "1"
+    app.trackedDate(anotherDate).find("minutes-input").value = "1"
+    app.trackedDate(anotherDate).find("add-button").click()
 
     isEqual(app.find("total-time").textContent, "3:4")
 
     // Clean up
-    app.trackedDate("1990-09-09").find("hours-input").value = "1"
-    app.trackedDate("1990-09-09").find("minutes-input").value = "1"
-    app.trackedDate("1990-09-09").find("subtract-button").click()
-    app.trackedDate("1990-09-09").find("subtract-button").click()
+    app.trackedDate(anotherDate).find("hours-input").value = "1"
+    app.trackedDate(anotherDate).find("minutes-input").value = "1"
+    app.trackedDate(anotherDate).find("subtract-button").click()
+    app.trackedDate(anotherDate).find("subtract-button").click()
   })
 
   test("subtracting time for the tracked date", (isEqual) => {
-    app.trackedDate("1980-08-08").find("hours-input").value = "1"
-    app.trackedDate("1980-08-08").find("minutes-input").value = "1"
-    app.trackedDate("1980-08-08").find("subtract-button").click()
-    isEqual(app.trackedDate("1980-08-08").find("time").textContent, "1:2")
+    app.trackedDate(aDate).find("hours-input").value = "1"
+    app.trackedDate(aDate).find("minutes-input").value = "1"
+    app.trackedDate(aDate).find("subtract-button").click()
+    isEqual(app.trackedDate(aDate).find("time").textContent, "1:2")
   })
 
   test("that hours and minutes can't go below zero", (isEqual) => {
-    app.trackedDate("1980-08-08").find("hours-input").value = "2"
-    app.trackedDate("1980-08-08").find("minutes-input").value = "3"
-    app.trackedDate("1980-08-08").find("subtract-button").click()
-    isEqual(app.trackedDate("1980-08-08").find("time").textContent, "0:0")
+    app.trackedDate(aDate).find("hours-input").value = "2"
+    app.trackedDate(aDate).find("minutes-input").value = "3"
+    app.trackedDate(aDate).find("subtract-button").click()
+    isEqual(app.trackedDate(aDate).find("time").textContent, "0:0")
   })
 
   test("deleting the tracked date by clicking subtract when time is zero", (isEqual) => {
-    isEqual(app.trackedDate("1980-08-08").isRendered, true)
-    app.trackedDate("1980-08-08").find("subtract-button").click()
-    isEqual(app.trackedDate("1980-08-08"), undefined)
+    isEqual(app.trackedDate(aDate).isRendered, true)
+    app.trackedDate(aDate).find("subtract-button").click()
+    isEqual(app.trackedDate(aDate), undefined)
   })
 }
 
