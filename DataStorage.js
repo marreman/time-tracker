@@ -5,5 +5,13 @@ export class DataStorage {
 
   persist(data) {
     localStorage.setItem("time-tracker", JSON.stringify(data))
+    this.ensureDataIsPersisted()
+  }
+
+  async ensureDataIsPersisted() {
+    const persisted = await navigator.storage.persisted()
+    if (!persisted) {
+      await navigator.storage.persist()
+    }
   }
 }
