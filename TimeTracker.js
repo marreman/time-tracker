@@ -28,7 +28,10 @@ export class TimeTracker {
   }
 
   eachDate(f) {
-    for (const trackedDate of this.#trackedDates.values()) {
+    const sorted = Array.from(this.#trackedDates.values()).sort(
+      (a, b) => a.date.getTime() - b.date.getTime()
+    )
+    for (const trackedDate of sorted) {
       f(trackedDate)
     }
   }

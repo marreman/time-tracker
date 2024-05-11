@@ -11,6 +11,10 @@ export class TrackedDate {
     this.#time = TimeCount.fromDisplayString(timeString)
   }
 
+  get date() {
+    return this.#date
+  }
+
   get time() {
     return this.#time
   }
