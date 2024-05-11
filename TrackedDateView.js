@@ -14,19 +14,19 @@ export class TrackedDateView {
     this.root.appendChild(summary)
 
     this.date = document.createElement("strong")
+    this.date.classList.add("text-lg")
     this.date.dataset.name = "date"
     this.date.textContent = this.model.dateAsString()
-    this.date.style.fontSize = "1.5em"
     summary.appendChild(this.date)
 
     this.time = document.createElement("span")
-    this.time.style.float = "right"
-    this.time.style.fontSize = "1.5em"
+    this.time.classList.add("text-lg")
     this.time.dataset.name = "time"
     this.time.textContent = this.model.time.asString()
     summary.appendChild(this.time)
 
     const row = new Row()
+    row.el.style.marginTop = "10px"
     this.root.appendChild(row.el)
 
     this.hoursInput = document.createElement("input")

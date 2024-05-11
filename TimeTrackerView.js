@@ -22,9 +22,11 @@ export class TimeTrackerView {
 
   renderDates() {
     this.timeTracker.eachDate((trackedDate) => {
+      const section = document.createElement("section")
       const view = new TrackedDateView(trackedDate)
+      section.appendChild(view.root)
       this.root.appendChild(document.createElement("hr"))
-      this.root.appendChild(view.root)
+      this.root.appendChild(section)
     })
   }
 
@@ -56,8 +58,7 @@ export class TimeTrackerView {
   renderFooter() {
     this.footer = document.createElement("footer")
     this.footer.dataset.name = "total-time"
-    this.footer.style.textAlign = "right"
-    this.footer.style.fontSize = "1.5em"
+    this.footer.classList.add("text-lg", "text-right")
     this.footer.textContent = this.timeTracker.totalTime()
     this.root.appendChild(this.footer)
   }
