@@ -1,7 +1,9 @@
+import { TimeCount } from "./TimeCount.js"
 import { TrackedDate } from "./TrackedDate.js"
 
 export class TimeTracker {
   #trackedDates = new Map()
+  #deleteHandler
   #changeHandler
 
   constructor(storage) {
@@ -34,7 +36,10 @@ export class TimeTracker {
   trackDate(dateString, timeString = "0:0") {
     const trackedDate = new TrackedDate(dateString, timeString)
     if (this.#trackedDates.has(trackedDate.dateAsISO())) return
-    trackedDate.onChange(this.saveToStorage.bind(this))
+    trackedDate.onChange(() => {
+      this.saveToStorage()
+      this.#changeHandler?.()
+    })
     trackedDate.onDelete(() => this.deleteTrackedDate(trackedDate))
     this.#trackedDates.set(trackedDate.dateAsISO(), trackedDate)
   }
@@ -42,10 +47,22 @@ export class TimeTracker {
   deleteTrackedDate(trackedDate) {
     this.#trackedDates.delete(trackedDate.dateAsISO())
     this.saveToStorage()
-    this.#changeHandler?.()
+    this.#deleteHandler?.()
+  }
+
+  onDelete(fn) {
+    this.#deleteHandler = fn
   }
 
   onChange(fn) {
     this.#changeHandler = fn
+  }
+
+  totalTime() {
+    const total = new TimeCount(0, 0)
+    this.eachDate((trackedDate) => {
+      total.add(trackedDate.time)
+    })
+    return total.asString()
   }
 }

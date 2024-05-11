@@ -6,13 +6,18 @@ export class TimeTrackerView {
     this.timeTracker = timeTracker
     this.root = parentElement
 
-    timeTracker.onChange(this.render.bind(this))
+    timeTracker.onDelete(this.render.bind(this))
+    timeTracker.onChange(() => {
+      this.updateFooter()
+    })
   }
 
   render() {
     this.root.innerHTML = ""
     this.renderHeader()
     this.renderDates()
+    this.root.appendChild(document.createElement("hr"))
+    this.renderFooter()
   }
 
   renderDates() {
@@ -46,6 +51,19 @@ export class TimeTrackerView {
     row.appendChild(newDateButton)
 
     this.root.appendChild(header)
+  }
+
+  renderFooter() {
+    this.footer = document.createElement("footer")
+    this.footer.dataset.name = "total-time"
+    this.footer.style.textAlign = "right"
+    this.footer.style.fontSize = "1.5em"
+    this.footer.textContent = this.timeTracker.totalTime()
+    this.root.appendChild(this.footer)
+  }
+
+  updateFooter() {
+    this.footer.textContent = this.timeTracker.totalTime()
   }
 
   addNewDate() {

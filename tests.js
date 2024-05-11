@@ -1,42 +1,57 @@
 export function runTests(app_) {
   let app = new ElementHandle(app_)
-  let trackedDate
 
   test("adding a new date", (isEqual) => {
     app.find("new-date-input").value = "1980-08-08"
     app.find("new-date-button").click()
-
-    trackedDate = app.handleFromSelector("#date-1980-08-08")
-
-    isEqual(trackedDate.find("date").textContent, "1980-08-08")
-    isEqual(trackedDate.find("time").textContent, "0:0")
+    isEqual(
+      app.trackedDate("1980-08-08").find("date").textContent,
+      "1980-08-08"
+    )
+    isEqual(app.trackedDate("1980-08-08").find("time").textContent, "0:0")
   })
 
   test("adding time for the tracked date", (isEqual) => {
-    trackedDate.find("hours-input").value = "2"
-    trackedDate.find("minutes-input").value = "3"
-    trackedDate.find("add-button").click()
-    isEqual(trackedDate.find("time").textContent, "2:3")
+    app.trackedDate("1980-08-08").find("hours-input").value = "2"
+    app.trackedDate("1980-08-08").find("minutes-input").value = "3"
+    app.trackedDate("1980-08-08").find("add-button").click()
+    isEqual(app.trackedDate("1980-08-08").find("time").textContent, "2:3")
+  })
+
+  test("that is shows a total", (isEqual) => {
+    app.find("new-date-input").value = "1990-09-09"
+    app.find("new-date-button").click()
+    app.trackedDate("1990-09-09").find("hours-input").value = "1"
+    app.trackedDate("1990-09-09").find("minutes-input").value = "1"
+    app.trackedDate("1990-09-09").find("add-button").click()
+
+    isEqual(app.find("total-time").textContent, "3:4")
+
+    // Clean up
+    app.trackedDate("1990-09-09").find("hours-input").value = "1"
+    app.trackedDate("1990-09-09").find("minutes-input").value = "1"
+    app.trackedDate("1990-09-09").find("subtract-button").click()
+    app.trackedDate("1990-09-09").find("subtract-button").click()
   })
 
   test("subtracting time for the tracked date", (isEqual) => {
-    trackedDate.find("hours-input").value = "1"
-    trackedDate.find("minutes-input").value = "1"
-    trackedDate.find("subtract-button").click()
-    isEqual(trackedDate.find("time").textContent, "1:2")
+    app.trackedDate("1980-08-08").find("hours-input").value = "1"
+    app.trackedDate("1980-08-08").find("minutes-input").value = "1"
+    app.trackedDate("1980-08-08").find("subtract-button").click()
+    isEqual(app.trackedDate("1980-08-08").find("time").textContent, "1:2")
   })
 
   test("that hours and minutes can't go below zero", (isEqual) => {
-    trackedDate.find("hours-input").value = "2"
-    trackedDate.find("minutes-input").value = "3"
-    trackedDate.find("subtract-button").click()
-    isEqual(trackedDate.find("time").textContent, "0:0")
+    app.trackedDate("1980-08-08").find("hours-input").value = "2"
+    app.trackedDate("1980-08-08").find("minutes-input").value = "3"
+    app.trackedDate("1980-08-08").find("subtract-button").click()
+    isEqual(app.trackedDate("1980-08-08").find("time").textContent, "0:0")
   })
 
   test("deleting the tracked date by clicking subtract when time is zero", (isEqual) => {
-    isEqual(trackedDate.isRendered, true)
-    trackedDate.find("subtract-button").click()
-    isEqual(trackedDate.isRendered, false)
+    isEqual(app.trackedDate("1980-08-08").isRendered, true)
+    app.trackedDate("1980-08-08").find("subtract-button").click()
+    isEqual(app.trackedDate("1980-08-08"), undefined)
   })
 }
 
@@ -57,8 +72,8 @@ class ElementHandle {
     return result
   }
 
-  handleFromSelector(selector) {
-    const element = this.element.querySelector(selector)
+  trackedDate(dateString) {
+    const element = this.element.querySelector(`#date-${dateString}`)
     if (element) {
       return new ElementHandle(element)
     }
