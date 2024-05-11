@@ -1,10 +1,10 @@
 import { NumericString } from "./NumericString.js"
-import { test } from "./test-lib.js"
+import { test } from "../test-lib.js"
 
 export class TimeCount {
   #minutes
 
-  static fromDisplayString(timeDisplayString) {
+  static fromDisplayString(timeDisplayString = "") {
     return TimeCount.fromStringParts(...timeDisplayString.split(":"))
   }
 
@@ -14,7 +14,7 @@ export class TimeCount {
     return new TimeCount(hours, minutes)
   }
 
-  constructor(hours, minutes) {
+  constructor(hours = 0, minutes = 0) {
     this.minutes = Math.round(minutes + hours * 60)
   }
 

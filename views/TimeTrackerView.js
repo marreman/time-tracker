@@ -2,35 +2,24 @@ import { Row } from "./Row.js"
 import { TrackedDateView } from "./TrackedDateView.js"
 
 export class TimeTrackerView {
-  constructor(timeTracker, parentElement) {
-    this.timeTracker = timeTracker
-    this.root = parentElement
-
-    timeTracker.onDelete(this.render.bind(this))
-    timeTracker.onChange(() => {
-      this.updateFooter()
-    })
+  constructor(model, app) {
+    this.model = model
+    this.app = app
+    this.initialize()
   }
 
-  render() {
-    this.root.innerHTML = ""
-    this.renderHeader()
-    this.renderDates()
+  initialize() {
+    this.root = document.createElement("main")
+    this.initializeHeader()
+    this.trackedDates = document.createElement("div")
+    this.root.appendChild(this.trackedDates)
     this.root.appendChild(document.createElement("hr"))
-    this.renderFooter()
+    this.initializeFooter()
+
+    this.render()
   }
 
-  renderDates() {
-    this.timeTracker.eachDate((trackedDate) => {
-      const section = document.createElement("section")
-      const view = new TrackedDateView(trackedDate)
-      section.appendChild(view.root)
-      this.root.appendChild(document.createElement("hr"))
-      this.root.appendChild(section)
-    })
-  }
-
-  renderHeader() {
+  initializeHeader() {
     const header = document.createElement("header")
 
     const title = document.createElement("h1")
@@ -49,27 +38,39 @@ export class TimeTrackerView {
     const newDateButton = document.createElement("button")
     newDateButton.dataset.name = "new-date-button"
     newDateButton.textContent = "Lägg till datum"
-    newDateButton.addEventListener("click", this.addNewDate.bind(this))
+    newDateButton.addEventListener("click", () => {
+      const dateString = this.newDateInput.value
+      this.app.trackDate(dateString)
+    })
     row.appendChild(newDateButton)
 
     this.root.appendChild(header)
   }
 
-  renderFooter() {
+  initializeFooter() {
     this.footer = document.createElement("footer")
     this.footer.dataset.name = "total-time"
     this.footer.classList.add("text-lg", "text-right")
-    this.footer.textContent = this.timeTracker.totalTime()
     this.root.appendChild(this.footer)
   }
 
-  updateFooter() {
-    this.footer.textContent = this.timeTracker.totalTime()
+  render() {
+    this.renderFooter()
+    this.renderDates()
   }
 
-  addNewDate() {
-    const value = this.newDateInput.value
-    this.timeTracker.trackDate(value)
-    this.render()
+  renderDates() {
+    this.trackedDates.innerHTML = ""
+    this.model.eachDate((trackedDate) => {
+      const section = document.createElement("section")
+      const view = new TrackedDateView(trackedDate, this.app)
+      section.appendChild(view.root)
+      this.trackedDates.appendChild(document.createElement("hr"))
+      this.trackedDates.appendChild(section)
+    })
+  }
+
+  renderFooter() {
+    this.footer.textContent = this.model.totalTime()
   }
 }

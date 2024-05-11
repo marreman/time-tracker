@@ -1,12 +1,13 @@
 import { Row } from "./Row.js"
 
 export class TrackedDateView {
-  constructor(trackedDate) {
-    this.model = trackedDate
-    this.initializeEl()
+  constructor(model, app) {
+    this.model = model
+    this.app = app
+    this.initialize()
   }
 
-  initializeEl() {
+  initialize() {
     this.root = document.createElement("details")
     this.root.id = `date-${this.model.dateAsISO()}`
 
@@ -16,13 +17,11 @@ export class TrackedDateView {
     this.date = document.createElement("strong")
     this.date.classList.add("text-lg")
     this.date.dataset.name = "date"
-    this.date.textContent = this.model.dateAsString()
     summary.appendChild(this.date)
 
     this.time = document.createElement("span")
     this.time.classList.add("text-lg")
     this.time.dataset.name = "time"
-    this.time.textContent = this.model.time.asString()
     summary.appendChild(this.time)
 
     const row = new Row()
@@ -51,7 +50,10 @@ export class TrackedDateView {
     this.addButton.classList.add("ml-auto")
     this.addButton.dataset.name = "add-button"
     this.addButton.textContent = "Lägg till"
-    this.addButton.addEventListener("click", this.addTime.bind(this))
+    this.addButton.addEventListener(
+      "click",
+      this.handleAddButtonClick.bind(this)
+    )
     row.appendChild(this.addButton)
 
     this.subtractButton = document.createElement("button")
@@ -59,30 +61,31 @@ export class TrackedDateView {
     this.subtractButton.textContent = "Ta bort"
     this.subtractButton.addEventListener(
       "click",
-      this.subtractTimeOrRemoveTrackedDate.bind(this)
+      this.handleSubtractButtonClick.bind(this)
     )
     row.appendChild(this.subtractButton)
+
+    this.render()
   }
 
-  addTime() {
-    this.model.addTime(this.hoursInput.value, this.minutesInput.value)
-    this.hoursInput.value = ""
-    this.minutesInput.value = ""
-    this.updateTimeView()
-  }
-
-  subtractTimeOrRemoveTrackedDate() {
-    if (this.model.timeIsZero()) {
-      this.model.delete()
-      return
-    }
-    this.model.subtractTime(this.hoursInput.value, this.minutesInput.value)
-    this.hoursInput.value = ""
-    this.minutesInput.value = ""
-    this.updateTimeView()
-  }
-
-  updateTimeView() {
+  render() {
+    this.date.textContent = this.model.dateAsString()
     this.time.textContent = this.model.timeAsString()
+  }
+
+  handleAddButtonClick() {
+    this.app.addTime(this.model, this.hoursInput.value, this.minutesInput.value)
+    this.hoursInput.value = ""
+    this.minutesInput.value = ""
+  }
+
+  handleSubtractButtonClick() {
+    this.app.subtractTime(
+      this.model,
+      this.hoursInput.value,
+      this.minutesInput.value
+    )
+    this.hoursInput.value = ""
+    this.minutesInput.value = ""
   }
 }

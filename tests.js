@@ -51,7 +51,7 @@ export function runTests(app_) {
   })
 
   test("deleting the tracked date by clicking subtract when time is zero", (isEqual) => {
-    isEqual(app.trackedDate(aDate).isRendered, true)
+    isEqual(app.trackedDate(aDate) != null, true)
     app.trackedDate(aDate).find("subtract-button").click()
     isEqual(app.trackedDate(aDate), undefined)
   })

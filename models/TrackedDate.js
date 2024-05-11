@@ -1,14 +1,19 @@
 import { TimeCount } from "./TimeCount.js"
 
 export class TrackedDate {
+  static fromJSON(dateString, timeString) {
+    return new TrackedDate(
+      new Date(dateString),
+      TimeCount.fromDisplayString(timeString)
+    )
+  }
+
   #date
   #time
-  #changeHandler
-  #deleteHandler
 
-  constructor(dateString, timeString) {
-    this.#date = new Date(dateString)
-    this.#time = TimeCount.fromDisplayString(timeString)
+  constructor(date, timeCount = new TimeCount()) {
+    this.#date = date
+    this.#time = timeCount
   }
 
   get date() {
@@ -37,23 +42,9 @@ export class TrackedDate {
 
   addTime(hoursString, minutesString) {
     this.#time.add(TimeCount.fromStringParts(hoursString, minutesString))
-    this.#changeHandler()
   }
 
   subtractTime(hoursString, minutesString) {
     this.#time.subtract(TimeCount.fromStringParts(hoursString, minutesString))
-    this.#changeHandler()
-  }
-
-  onChange(fn) {
-    this.#changeHandler = fn
-  }
-
-  onDelete(fn) {
-    this.#deleteHandler = fn
-  }
-
-  delete() {
-    this.#deleteHandler?.()
   }
 }

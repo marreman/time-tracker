@@ -1,10 +1,14 @@
-export class DataStorage {
+export class LocalStorage {
+  constructor(storageKey) {
+    this.storageKey = storageKey
+  }
+
   retrive() {
-    return JSON.parse(localStorage.getItem("time-tracker") ?? "{}")
+    return JSON.parse(localStorage.getItem(this.storageKey) ?? "{}")
   }
 
   persist(data) {
-    localStorage.setItem("time-tracker", JSON.stringify(data))
+    localStorage.setItem(this.storageKey, JSON.stringify(data))
     this.ensureDataIsPersisted()
   }
 

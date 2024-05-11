@@ -1,18 +1,11 @@
-import { DataStorage } from "./DataStorage.js"
-import { TimeTracker } from "./TimeTracker.js"
-import { TimeTrackerView } from "./TimeTrackerView.js"
+import { LocalStorage } from "./models/LocalStorage.js"
 import { runTests } from "./tests.js"
+import { App } from "./controllers/App.js"
 
-const app = {}
-
-app.storage = new DataStorage()
-app.model = new TimeTracker(app.storage)
-app.view = new TimeTrackerView(app.model, document.body)
-
-app.view.render()
-
-window.app = app
+const app = new App(new LocalStorage("time-tracker"))
+document.body.appendChild(app.view.root)
 
 if (location.hash === "#test") {
-  runTests(app.view.root)
+  const testApp = new App(new LocalStorage("time-tracker-test"))
+  runTests(testApp.view.root)
 }
