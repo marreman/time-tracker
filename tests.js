@@ -1,11 +1,12 @@
-export function runTests(app) {
+export function runTests(app_) {
+  let app = new ElementHandle(app_)
   let trackedDate
 
   test("adding a new date", (isEqual) => {
-    app.querySelector("[data-name='new-date-input']").value = "1980-08-08"
-    app.querySelector("[data-name='new-date-button']").click()
+    app.find("new-date-input").value = "1980-08-08"
+    app.find("new-date-button").click()
 
-    trackedDate = new ElementHandle(app.querySelector("#date-1980-08-08"))
+    trackedDate = app.handleFromSelector("#date-1980-08-08")
 
     isEqual(trackedDate.find("date").textContent, "1980-08-08")
     isEqual(trackedDate.find("time").textContent, "0:0")
@@ -45,7 +46,22 @@ class ElementHandle {
   }
 
   find(name) {
-    return this.element.querySelector(`[data-name='${name}']`)
+    const result = this.element.querySelector(`[data-name='${name}']`)
+    if (!result) {
+      console.error(
+        `Found no element with data-name=${name}`,
+        "in",
+        this.element
+      )
+    }
+    return result
+  }
+
+  handleFromSelector(selector) {
+    const element = this.element.querySelector(selector)
+    if (element) {
+      return new ElementHandle(element)
+    }
   }
 
   get isRendered() {
