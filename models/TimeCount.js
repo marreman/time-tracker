@@ -37,22 +37,24 @@ export class TimeCount {
   }
 
   add(aTimeCount) {
-    this.minutes += aTimeCount.minutes
+    return new TimeCount(0, this.minutes + aTimeCount.minutes)
   }
 
   subtract(aTimeCount) {
-    this.minutes -= aTimeCount.minutes
+    return new TimeCount(0, this.minutes - aTimeCount.minutes)
   }
 }
 
 test("adds hours when necessary", (isEqual) => {
   const a = new TimeCount(0, 0)
-  a.add(new TimeCount(0, 90))
-  isEqual(a.asString(), "1:30")
+  const b = new TimeCount(0, 90)
+  const r = a.add(b)
+  isEqual(r.asString(), "1:30")
 })
 
 test("removes hours when necessary", (isEqual) => {
   const a = new TimeCount(1, 10)
-  a.subtract(new TimeCount(0, 40))
-  isEqual(a.asString(), "0:30")
+  const b = new TimeCount(0, 40)
+  const r = a.subtract(b)
+  isEqual(r.asString(), "0:30")
 })

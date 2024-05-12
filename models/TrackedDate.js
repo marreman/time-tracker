@@ -41,10 +41,14 @@ export class TrackedDate {
   }
 
   addTime(hoursString, minutesString) {
-    this.#time.add(TimeCount.fromStringParts(hoursString, minutesString))
+    this.#time = this.#time.add(
+      TimeCount.fromStringParts(hoursString, minutesString)
+    )
   }
 
   subtractTime(hoursString, minutesString) {
-    this.#time.subtract(TimeCount.fromStringParts(hoursString, minutesString))
+    this.#time = this.#time.subtract(
+      TimeCount.fromStringParts(hoursString, minutesString)
+    )
   }
 }

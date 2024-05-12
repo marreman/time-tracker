@@ -40,9 +40,9 @@ export class TimeTracker {
   }
 
   totalTime() {
-    const total = new TimeCount(0, 0)
+    let total = new TimeCount(0, 0)
     this.eachDate((trackedDate) => {
-      total.add(trackedDate.time)
+      total = total.add(trackedDate.time)
     })
     return total.asString()
   }
