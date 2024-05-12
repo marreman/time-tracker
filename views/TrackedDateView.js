@@ -1,5 +1,3 @@
-import { Row } from "./Row.js"
-
 export class TrackedDateView {
   constructor(model, app) {
     this.model = model
@@ -24,26 +22,24 @@ export class TrackedDateView {
     this.time.dataset.name = "time"
     summary.appendChild(this.time)
 
-    const row = new Row()
-    row.el.style.marginTop = "16px"
-    this.root.appendChild(row.el)
+    const timeModificationControls = document.createElement("div")
+    timeModificationControls.classList.add("time-modification-controls")
+    this.root.appendChild(timeModificationControls)
 
     const timeInput = document.createElement("div")
     timeInput.classList.add("time-input")
-    row.appendChild(timeInput)
+    timeModificationControls.appendChild(timeInput)
 
     this.hoursInput = document.createElement("input")
     this.hoursInput.dataset.name = "hours-input"
     this.hoursInput.inputMode = "numeric"
     this.hoursInput.placeholder = "00"
-    this.hoursInput.style.minWidth = 0
     timeInput.appendChild(this.hoursInput)
 
     this.minutesInput = document.createElement("input")
     this.minutesInput.dataset.name = "minutes-input"
     this.minutesInput.inputMode = "numeric"
     this.minutesInput.placeholder = "00"
-    this.minutesInput.style.minWidth = 0
     timeInput.appendChild(this.minutesInput)
 
     this.addButton = document.createElement("button")
@@ -54,7 +50,7 @@ export class TrackedDateView {
       "click",
       this.handleAddButtonClick.bind(this)
     )
-    row.appendChild(this.addButton)
+    timeModificationControls.appendChild(this.addButton)
 
     this.subtractButton = document.createElement("button")
     this.subtractButton.dataset.name = "subtract-button"
@@ -63,7 +59,7 @@ export class TrackedDateView {
       "click",
       this.handleSubtractButtonClick.bind(this)
     )
-    row.appendChild(this.subtractButton)
+    timeModificationControls.appendChild(this.subtractButton)
 
     this.render()
   }

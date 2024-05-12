@@ -1,4 +1,3 @@
-import { Row } from "./Row.js"
 import { TrackedDateView } from "./TrackedDateView.js"
 
 export class TimeTrackerView {
@@ -26,14 +25,15 @@ export class TimeTrackerView {
     title.textContent = "Tidsräknare"
     header.appendChild(title)
 
-    const row = new Row()
-    header.appendChild(row.el)
+    const newDateControls = document.createElement("div")
+    newDateControls.classList.add("new-date-controls")
+    header.appendChild(newDateControls)
 
     this.newDateInput = document.createElement("input")
     this.newDateInput.dataset.name = "new-date-input"
     this.newDateInput.type = "date"
     this.newDateInput.valueAsDate = new Date()
-    row.appendChild(this.newDateInput)
+    newDateControls.appendChild(this.newDateInput)
 
     const newDateButton = document.createElement("button")
     newDateButton.dataset.name = "new-date-button"
@@ -42,7 +42,7 @@ export class TimeTrackerView {
       const dateString = this.newDateInput.value
       this.app.trackDate(dateString)
     })
-    row.appendChild(newDateButton)
+    newDateControls.appendChild(newDateButton)
 
     this.root.appendChild(header)
   }
