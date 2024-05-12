@@ -4,7 +4,7 @@ export class TrackedDate {
   static fromJSON(dateString, timeString) {
     return new TrackedDate(
       new Date(dateString),
-      TimeCount.fromDisplayString(timeString)
+      TimeCount.fromString(timeString)
     )
   }
 
