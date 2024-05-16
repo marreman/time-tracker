@@ -6,11 +6,13 @@ export class TrackedDateView {
   }
 
   initialize() {
-    this.root = document.createElement("details")
+    this.root = document.createElement("section")
     this.root.id = `date-${this.model.dateAsISO()}`
 
+    this.details = document.createElement("details")
+    this.root.appendChild(this.details)
     const summary = document.createElement("summary")
-    this.root.appendChild(summary)
+    this.details.appendChild(summary)
 
     this.date = document.createElement("strong")
     this.date.classList.add("text-lg")
@@ -24,7 +26,7 @@ export class TrackedDateView {
 
     const timeModificationControls = document.createElement("div")
     timeModificationControls.classList.add("time-modification-controls")
-    this.root.appendChild(timeModificationControls)
+    this.details.appendChild(timeModificationControls)
 
     const timeInput = document.createElement("div")
     timeInput.classList.add("time-input")
@@ -61,7 +63,57 @@ export class TrackedDateView {
     )
     timeModificationControls.appendChild(this.subtractButton)
 
+    this.untrackDateButton = document.createElement("button")
+    this.untrackDateButton.dataset.name = "untrack-date-button"
+    this.untrackDateButton.classList.add("untrack-date-button")
+    this.untrackDateButton.textContent = "Släng"
+    this.untrackDateButton.addEventListener(
+      "click",
+      this.handleUntrackDateButtonClick.bind(this)
+    )
+    this.root.appendChild(this.untrackDateButton)
+
+    const handlePointerMove = this.handlePointerMove.bind(this)
+
+    this.details.addEventListener("pointerdown", (event) => {
+      this.state = {
+        initialX: event.clientX,
+        offset: {
+          x: event.clientX - event.target.offsetLeft,
+          y: event.clientY - event.target.offsetTop,
+        },
+      }
+      this.details.setPointerCapture(event.pointerId)
+      this.details.addEventListener("pointermove", handlePointerMove)
+    })
+
+    this.details.addEventListener("pointerup", (event) => {
+      const width = this.untrackDateButton.getBoundingClientRect().width
+      const distanceMoved = this.state.initialX - event.clientX
+      this.root.classList.add("animate-transform")
+      setTimeout(() => {
+        this.root.classList.remove("animate-transform")
+      }, 200)
+
+      if (distanceMoved > width * 0.5) {
+        this.root.style.transform = `translateX(-${width}px)`
+      } else {
+        this.root.style.transform = `translateX(0px)`
+      }
+
+      this.state = undefined
+      this.details.releasePointerCapture(event.pointerId)
+      this.details.removeEventListener("pointermove", handlePointerMove)
+    })
+
     this.render()
+  }
+
+  handlePointerMove(event) {
+    if (!this.state) return
+    this.root.style.transform = `translateX(${
+      event.clientX - this.state.offset.x + "px"
+    })`
   }
 
   render() {
@@ -83,5 +135,9 @@ export class TrackedDateView {
     )
     this.hoursInput.value = ""
     this.minutesInput.value = ""
+  }
+
+  handleUntrackDateButtonClick() {
+    this.app.untrackDate(this.model)
   }
 }

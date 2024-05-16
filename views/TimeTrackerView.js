@@ -62,11 +62,9 @@ export class TimeTrackerView {
   renderDates() {
     this.trackedDates.innerHTML = ""
     this.model.eachDate((trackedDate) => {
-      const section = document.createElement("section")
       const view = new TrackedDateView(trackedDate, this.app)
-      section.appendChild(view.root)
       this.trackedDates.appendChild(document.createElement("hr"))
-      this.trackedDates.appendChild(section)
+      this.trackedDates.appendChild(view.root)
     })
   }
 
