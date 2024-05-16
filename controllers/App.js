@@ -30,11 +30,7 @@ export class App {
   }
 
   subtractTime(trackedDate, hoursString, minutesString) {
-    if (trackedDate.timeIsZero()) {
-      this.model.removeTrackedDate(trackedDate)
-    } else {
-      trackedDate.subtractTime(hoursString, minutesString)
-    }
+    trackedDate.subtractTime(hoursString, minutesString)
     this.storage.persist(this.model.toJSON())
     this.view.render()
   }

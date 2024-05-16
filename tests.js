@@ -43,11 +43,11 @@ export function runTests(app_) {
     isEqual(app.trackedDate(aDate).find("time").textContent, "1:02")
   })
 
-  test("that hours and minutes can't go below zero", (isEqual) => {
+  test("that hours and minutes can go below zero", (isEqual) => {
     app.trackedDate(aDate).find("hours-input").value = "2"
     app.trackedDate(aDate).find("minutes-input").value = "3"
     app.trackedDate(aDate).find("subtract-button").click()
-    isEqual(app.trackedDate(aDate).find("time").textContent, "0:00")
+    isEqual(app.trackedDate(aDate).find("time").textContent, "–1:01")
   })
 
   test("deleting the tracked date by clicking subtract when time is zero", (isEqual) => {

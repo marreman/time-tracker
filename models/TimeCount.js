@@ -5,13 +5,20 @@ export class TimeCount {
   #minutes
 
   static fromString(timeString = "") {
-    return TimeCount.fromStringParts(...timeString.split(":"))
+    let isNegative = false
+    if (timeString.startsWith("–")) {
+      isNegative = true
+      timeString = timeString.slice(1)
+    }
+    const [hoursString, minutesString] = timeString.split(":")
+    return TimeCount.fromStringParts(hoursString, minutesString, isNegative)
   }
 
-  static fromStringParts(hoursString, minutesString) {
-    const hours = new NumericString(hoursString).asNumber()
-    const minutes = new NumericString(minutesString).asNumber()
-    return new TimeCount(minutes + hours * 60)
+  static fromStringParts(hoursString, minutesString, isNegative) {
+    let minutes = new NumericString(minutesString).asNumber()
+    minutes += new NumericString(hoursString).asNumber() * 60
+    if (isNegative) minutes *= -1
+    return new TimeCount(minutes)
   }
 
   constructor(minutes = 0) {
@@ -23,7 +30,7 @@ export class TimeCount {
   }
 
   set minutes(value) {
-    this.#minutes = Math.max(0, value)
+    this.#minutes = value
   }
 
   isZero() {
@@ -31,9 +38,13 @@ export class TimeCount {
   }
 
   asString() {
-    const hours = Math.floor(this.#minutes / 60)
-    const minutes = this.#minutes % 60
-    return `${hours}:${minutes.toString().padStart(2, "0")}`
+    const isNegative = this.#minutes < 0
+    const absMinutes = Math.abs(this.#minutes)
+    const hours = Math.floor(absMinutes / 60)
+    const minutes = absMinutes % 60
+    return `${isNegative ? "–" : ""}${hours}:${minutes
+      .toString()
+      .padStart(2, "0")}`
   }
 
   add(aTimeCount) {
