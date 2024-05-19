@@ -29,7 +29,11 @@ export class TrackedDate {
   }
 
   dateAsString() {
-    return new Intl.DateTimeFormat("sv-SE").format(this.#date)
+    return new Intl.DateTimeFormat("sv-SE", {
+      day: "numeric",
+      month: "short",
+      weekday: "short",
+    }).format(this.#date)
   }
 
   timeAsString() {
